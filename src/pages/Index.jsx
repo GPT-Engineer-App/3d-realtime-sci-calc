@@ -6,16 +6,25 @@ const buttons = ["7", "8", "9", "/", "4", "5", "6", "*", "1", "2", "3", "-", "."
 
 const Index = () => {
   const [input, setInput] = useState("");
+  const [result, setResult] = useState("");
+
+  const evaluateResult = (currentInput) => {
+    try {
+      const evaluation = eval(currentInput);
+      setResult(evaluation.toString());
+    } catch (e) {
+      setResult("Error");
+    }
+  };
 
   const handleButtonClick = (value) => {
+    let newInput = input + value;
     if (value === "=") {
-      try {
-        setInput(eval(input).toString());
-      } catch (e) {
-        setInput("Error");
-      }
+      setInput(newInput);
+      evaluateResult(input);
     } else {
-      setInput(input + value);
+      setInput(newInput);
+      evaluateResult(newInput);
     }
   };
 
@@ -32,6 +41,9 @@ const Index = () => {
       <Container maxW="container.sm" centerContent>
         <VStack spacing={4} my={10}>
           <Input value={input} placeholder="Enter calculation" size="lg" readOnly />
+          <Text fontSize="xl" color="gray.500">
+            {result}
+          </Text>
           <Grid templateColumns="repeat(4, 1fr)" gap={2}>
             {buttons.map((button) => (
               <Button key={button} onClick={() => handleButtonClick(button)} colorScheme="teal" variant="solid" fontSize="lg">
